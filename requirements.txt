@@ -1,8 +1,6 @@
 alabaster==0.7.12
 amqp==2.4.2
-anaconda-client==1.7.2
-anaconda-navigator==1.9.6
-anaconda-project==0.8.2
+
 asn1crypto==0.24.0
 astroid==2.1.0
 astropy==3.1
@@ -131,7 +129,7 @@ path.py==11.5.0
 pathlib2==2.3.3
 patsy==0.5.1
 peewee==3.8.2
-peewee-db-evolve==3.7.0
+
 pep8==1.7.1
 pickleshare==0.7.5
 Pillow==5.3.0
