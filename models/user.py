@@ -13,7 +13,7 @@ class User(BaseModel):
             'id' : self.id,
             'username':self.username,
             'email' : self.email,
-            # 'avatar_url' : self.avatar_url,
+            #  
         }
 
         return json_obj
