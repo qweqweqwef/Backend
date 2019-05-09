@@ -18,6 +18,28 @@ def index():
     })
     return result
 
+@users_api_blueprint.route('/edit', methods=['POST'])
+@jwt_required
+def edit():
+    received_data = request.form
+    target_user = User.get_or_none( User.id==received_data['user_id'] )
+
+    target_user.username = received_data['username']
+    
+    if target_user.save():
+        successfully_edited = True
+
+    if (received_data['password'] != ''):
+        hashed_password = generate_password_hash(received_data['password'])
+        target_user.password = hashed_password
+
+    result = jsonify({
+        'status' : successfully_edited,
+        'data' : target_user.as_dict()
+    })
+    return result
+
+
 @users_api_blueprint.route('/new', methods=['POST'])
 def create():
     data = request.form
@@ -39,6 +61,7 @@ def create():
     })
 
     return result
+
 
 @users_api_blueprint.route('/login',methods=['POST'])
 def login():
@@ -69,6 +92,19 @@ def login():
         'access_token':access_token,
         'refresh_token': refresh_token
 
+    })
+
+    return result
+
+
+@users_api_blueprint.route('/<id>/show', methods=['GET'])
+def show(id):
+    target_user_object = User.get_or_none(User.id == id)
+    user_exists = (target_user_object != None)
+
+    result = jsonify({
+        'status' : user_exists,
+        'data' : target_user_object.as_dict()
     })
 
     return result
