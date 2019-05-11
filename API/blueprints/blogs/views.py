@@ -9,59 +9,55 @@ blogs_api_blueprint = Blueprint('blogs_api',
                              template_folder='templates')
 
 
-@blogs_api_blueprint.route("/",methods=['GET']) # all blogs
+@blogs_api_blueprint.route("/",methods=['GET'])
 def index():
-    b_query = Blog.select()
-    b_list = []
+    blog_query = Blog.select()
+    blog_list = []
 
-    for i in b_query:
-        b_list.append(i.as_dict())
+    for b in blog_query:
+        blog_list.append(b.as_dict())
 
     result = jsonify({
-        'data':b_list
+        'data':blog_list
     })
 
     return result
 
-@blogs_api_blueprint.route('/new',methods=['POST']) #create
+
+@blogs_api_blueprint.route('/new',methods=['POST'])
 @jwt_required
 def create():
     data = request.form
 
-    new_b = Blog.create(
+    new_blog = Blog.create(
         parent_user = data['user_id'],
-        title = data['title'],
-        d = data['d'],
+        desc = data['desc'],
+        title = data['title']
     )
 
-    new_b.save()
+    new_blog.save()
 
     result = jsonify({
         'status':True,
-        'data' : new_b.as_dict()
+        'data' : new_blog.as_dict()
     })
 
     return result
-@blogs_api_blueprint.route("/edit",methods=["POST"]) #edit
-@jwt_required
-def edit():
-    data = request.form
-    target_b = Blog.get_or_none(Blog.id==data['blog_id'])
 
-    target_b.title = data['blog_title']
-    target_b.desc = data['blog_d']
 
-    if target_b.save():
-        success = True
-    
+@blogs_api_blueprint.route('/<id>',methods=["GET"])
+def show(id):
+    blog = Blog.get_or_none(Blog.title==id)
+    blog_found = blog!=None
     result = jsonify({
-        'status' : success,
-        'data' : target_b.as_dict()
+        'status':blog_found,
+        'data':blog.as_dict()
     })
 
     return result
 
-@blogs_api_blueprint.route('/delete',methods=["POST"]) #delete
+
+@blogs_api_blueprint.route('/delete',methods=["POST"])
 @jwt_required
 def delete():
     deletion_id = int(request.form['blog_id'])
@@ -77,14 +73,23 @@ def delete():
 
     return result
 
-@blogs_api_blueprint.route('/<id>',methods=["GET"])
-def show(id):
 
-    blog = Blog.get_or_none(Blog.title==id)
-    b_found = blog!=None
+
+@blogs_api_blueprint.route("/edit",methods=["POST"])
+@jwt_required
+def edit():
+    data = request.form
+    target_blog = Blog.get_or_none(Blog.id==data['blog_id'])
+
+    target_blog.title = data['blog_title']
+    target_blog.d = data['blog_d']
+
+    if target_blog.save():
+        successfully_edited = True
+    
     result = jsonify({
-        'status':b_found,
-        'data':blog.as_dict()
+        'status' : successfully_edited,
+        'data' : target_blog.as_dict()
     })
 
     return result

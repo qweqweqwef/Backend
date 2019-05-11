@@ -4,7 +4,7 @@ from flask import Flask
 from models.base_model import db
 
 web_dir = os.path.join(os.path.dirname(
-    os.path.abspath(__file__)), 'Todo_list')
+    os.path.abspath(__file__)), 'API')
 
 app = Flask('BLOG', root_path=web_dir)
 
