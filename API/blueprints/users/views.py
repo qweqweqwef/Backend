@@ -65,33 +65,33 @@ def create():
 
 @users_api_blueprint.route('/login',methods=['POST'])
 def login():
-    
-    email = request.form['email']
-    password = request.form['password']
+    data = request.form
 
-    user_obj = User.get_or_none(User.email==email)
+    username = data['username']
+    password = data['password']
+
+    user_obj = User.get_or_none(User.username == username)
     user_found = (user_obj != None)
 
-    access_token=None
-    refresh_token=None
-    login=False
-    returned_data=None
+    logged_in = False
+    access_token = None
+    refresh_token = None
+    return_data = None
 
     if user_found:
         if check_password_hash(user_obj.password,password):
             access_token = create_access_token(identity=user_obj.as_dict())
             refresh_token = create_refresh_token(identity=user_obj.as_dict())
-            returned_data = user_obj.as_dict()
-            login=True
+            return_data = user_obj.as_dict()
+            logged_in = True
         else:
             user_obj = None
     
     result = jsonify({
-        'status':(user_found and login),
-        'data':returned_data,
-        'access_token':access_token,
-        'refresh_token': refresh_token
-
+        'status' : (user_found and logged_in),
+        'data' : return_data,
+        'access_token' : access_token,
+        'refresh_token' : refresh_token
     })
 
     return result

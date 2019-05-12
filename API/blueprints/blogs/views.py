@@ -74,7 +74,6 @@ def delete():
     return result
 
 
-
 @blogs_api_blueprint.route("/edit",methods=["POST"])
 @jwt_required
 def edit():
@@ -82,7 +81,7 @@ def edit():
     target_blog = Blog.get_or_none(Blog.id==data['blog_id'])
 
     target_blog.title = data['blog_title']
-    target_blog.d = data['blog_d']
+    target_blog.desc = data['blog_desc']
 
     if target_blog.save():
         successfully_edited = True

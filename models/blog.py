@@ -13,7 +13,7 @@ class Blog(BaseModel):
             'id' : self.id,
             "parent_user" : self.parent_user.username,
             "title" : self.title,
-            'desc' : self.desc,
+            'desc' : self.desc
         }
 
         return json_obj
